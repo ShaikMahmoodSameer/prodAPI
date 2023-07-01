@@ -1,17 +1,4 @@
-const tests = [{
-    "testId" : "INV1663",
-    "testTitle" : "AMMONIA", 
-    "testPrice" : 2000
-},{
-    "testId" : "INV1441",
-    "testTitle" : "IHC ER/PR/HER2nu(BREAST PANEL)", 
-    "testPrice" : 4000
-},
-{
-    "testId" : "INV2408",
-    "testTitle" : "IHC ER/PR/HER2nu(Breast panel) + Ki-67", 
-    "testPrice" : 5000
-},
+const testsarr = [
 {
     "testId" : "INV2", 
     "testTitle" : "10X300 SWAB C/S", 
@@ -258,57 +245,53 @@ const con = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "",
-    database: "test" 
+    database: "konnect_db0" 
 });
-function add_into_mysqldb_tests_tests(){
-    
+
+function add_into_mysqldb_tests_tests(test_id,test_title,test_price){
     con.connect(function(err){
-            if(err) throw err;
-            // console.log('mysql DB connected');
-        for(var i = 1; i < tests.length; i++){
+        if(err){
+            throw err;
+        }else{
+            console.log('mysql DB connected');
             var sql = "INSERT into tests (test_id, test_title, test_price) VALUES ?";
-            var values = [
-                [tests[i].testId, tests[i].testTitle, tests[i].testPrice]
-            ];
+            var values = [[test_id,test_title,test_price]];
             con.query(sql, [values], function(err, result){
                 if(err) throw err;
                 console.log('Records inserted into db: '+result.affectedRows);
-            })
-        }    
+            }) 
+        }
     })
-    
 }
-add_into_mysqldb_tests_tests();
 
 
-// for(var i = 0; i < tests.length; i++){
-//     var tstId = tests[i].testId;
-//     var tstTitle = tests[i].testTitle;
-//     var tstPrice = tests[i].testPrice;
-//     function add_into_mysqldb_tests_tests(){
-//         con.connect(function(err){
-//             if(err) throw err;
-//             // console.log('mysql DB connected');
-//             var sql = "INSERT into tests (test_id, test_title, test_price) VALUES ?";
-//             var values = [
-//                 [tstId, tstTitle, tstPrice]
-//             ];
-//             con.query(sql, [values], function(err, result){
-//                 if(err) throw err;
-//                 console.log('Records inserted into db: '+result.affectedRows);
-//             })
-//         })
-//     }
-//     add_into_mysqldb_tests_tests();
+// for(var i = 1; i < tests.length; i++){
+        //     
+        // }  
+
+// for(var i=0; i<testsarr.length; i++){
+    add_into_mysqldb_tests_tests(
+        testsarr[0].testId,
+        testsarr[0].testTitle,
+        testsarr[0].testPrice
+    );
 // }
-
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname +'/index.html');
 })
-// app.post('/', (req, res) => {
-    
-// })
+app.post('/', (req, res) => {
+    // const test_id = req.body.test_id;
+    // const test_title = req.body.test_title;
+    // const test_price = req.body.test_price;
+    // for(var i=0; i<testsarr.length; i++){
+        // add_into_mysqldb_tests_tests(
+        //     testsarr[0].testId,
+        //     testsarr[0].testTitle,
+        //     testsarr[0].testPrice
+        // );
+    // }   
+})
 
 const PORT = process.env.PORT  || 8080;
 app.listen(PORT, () => {
